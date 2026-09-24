@@ -13,16 +13,16 @@ import com.example.service.FileManagerService
 
 class VibeForgeApp : Application() {
 
-    lateinit var database: AppDatabase
-    lateinit var apiKeyRepository: ApiKeyRepository
-    lateinit var chatRepository: ChatRepository
-    lateinit var workspaceRepository: WorkspaceRepository
-    lateinit var fileManagerService: FileManagerService
-    lateinit var aiService: AiService
+    lateinit val database: AppDatabase
+    lateinit val apiKeyRepository: ApiKeyRepository
+    lateinit val chatRepository: ChatRepository
+    lateinit val workspaceRepository: WorkspaceRepository
+    lateinit val fileManagerService: FileManagerService
+    lateinit val aiService: AiService
     
-    lateinit var manageApiKeysUseCase: ManageApiKeysUseCase
-    lateinit var workspaceFileUseCase: WorkspaceFileUseCase
-    lateinit var aiCodingChatUseCase: AiCodingChatUseCase
+    lateinit val manageApiKeysUseCase: ManageApiKeysUseCase
+    lateinit val workspaceFileUseCase: WorkspaceFileUseCase
+    lateinit val aiCodingChatUseCase: AiCodingChatUseCase
 
     override fun onCreate() {
         super.onCreate()

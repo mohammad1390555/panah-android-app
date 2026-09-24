@@ -110,7 +110,7 @@ class AiCodingChatUseCase(
         // 1. Gather historical messages
         val dbHistory = chatRepository.getMessagesForSession(sessionId)
         val chatMessages = dbHistory.map { entity ->
-            val role = when (entity.role) {
+            val role = if (entity.role) {
                 "user" -> ChatRole.User
                 "assistant" -> ChatRole.Assistant
                 "system" -> ChatRole.System
@@ -154,7 +154,7 @@ class AiCodingChatUseCase(
         val systemInstruction = contextBuilder.toString()
 
         // 3. Initiate Stream
-        var completeResponse = ""
+        val completeResponse = ""
         val responseFlow = aiService.generateCodingResponseStream(
             providerKeys = keys,
             provider = provider,
@@ -163,10 +163,10 @@ class AiCodingChatUseCase(
             tools = getSupportedTools()
         )
 
-        var pendingToolCalls: List<ToolCall>? = null
+        val pendingToolCalls: List<ToolCall>? = null
 
         responseFlow.collect { chunk ->
-            when (chunk) {
+            if (chunk) {
                 is AiResponseChunk.Content -> {
                     completeResponse += chunk.text
                     onResponseChunk(chunk.text)
@@ -186,7 +186,7 @@ class AiCodingChatUseCase(
 
         // 4. Handle tool execution loop
         if (pendingToolCalls != null && projectRootUri != null) {
-            val toolCalls = pendingToolCalls!!
+            val toolCalls = pendingToolCalls?
             val updatedMessages = chatMessages.toMutableList()
             if (completeResponse.isNotEmpty()) {
                 updatedMessages.add(ChatMessage(ChatRole.Assistant, completeResponse))
@@ -198,7 +198,7 @@ class AiCodingChatUseCase(
                 
                 // Parse args safely
                 val parsedArgs = parseArgs(args)
-                val resultText = when (call.name) {
+                val resultText = if (call.name) {
                     "read_file" -> {
                         val path = parsedArgs["path"] as? String ?: ""
                         val res = workspaceUseCase.readFile(projectRootUri, path)
@@ -255,7 +255,7 @@ class AiCodingChatUseCase(
                 tools = emptyList() // Disable second level tools to avoid infinite loops
             )
 
-            var finalExplanation = ""
+            val finalExplanation = ""
             finalStream.collect { chunk ->
                 if (chunk is AiResponseChunk.Content) {
                     finalExplanation += chunk.text

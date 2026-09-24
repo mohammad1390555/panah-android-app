@@ -76,7 +76,7 @@ class FileManagerService(private val context: Context) {
         if (relativePath.isEmpty()) return@withContext rootDoc
 
         val parts = relativePath.split("/")
-        var current: DocumentFile = rootDoc
+        val current: DocumentFile = rootDoc
         for (part in parts) {
             if (part.isEmpty()) continue
             current = current.findFile(part) ?: return@withContext null
@@ -102,7 +102,7 @@ class FileManagerService(private val context: Context) {
      */
     suspend fun writeFileContent(rootUri: Uri, relativePath: String, content: String): Boolean = withContext(Dispatchers.IO) {
         try {
-            var docFile = findFile(rootUri, relativePath)
+            val docFile = findFile(rootUri, relativePath)
             if (docFile == null) {
                 // File does not exist, let's create it. We need to find or create parent directories.
                 val parts = relativePath.split("/")
@@ -135,10 +135,10 @@ class FileManagerService(private val context: Context) {
     private fun findOrCreateDirectory(rootUri: Uri, relativePath: String): DocumentFile? {
         val rootDoc = DocumentFile.fromTreeUri(context, rootUri) ?: return null
         val parts = relativePath.split("/")
-        var current: DocumentFile = rootDoc
+        val current: DocumentFile = rootDoc
         for (part in parts) {
             if (part.isEmpty()) continue
-            var next = current.findFile(part)
+            val next = current.findFile(part)
             if (next == null || !next.isDirectory) {
                 next = current.createDirectory(part) ?: return null
             }
@@ -187,11 +187,11 @@ class FileManagerService(private val context: Context) {
                 try {
                     context.contentResolver.openInputStream(file.uri)?.use { stream ->
                         val reader = BufferedReader(InputStreamReader(stream, Charsets.UTF_8))
-                        var lineNum = 1
-                        var line: String?
+                        val lineNum = 1
+                        val line: String?
                         while (reader.readLine().also { line = it } != null) {
-                            if (line!!.contains(query, ignoreCase = true)) {
-                                results.add("$relativePath:$lineNum: ${line!!.trim()}")
+                            if (line?.contains(query, ignoreCase = true)) {
+                                results.add("$relativePath:$lineNum: ${line?.trim()}")
                             }
                             lineNum++
                         }

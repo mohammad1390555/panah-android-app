@@ -29,9 +29,9 @@ import com.example.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var apiKeyViewModel: ApiKeyViewModel
-    private lateinit var workspaceViewModel: WorkspaceViewModel
-    private lateinit var chatViewModel: ChatViewModel
+    private lateinit val apiKeyViewModel: ApiKeyViewModel
+    private lateinit val workspaceViewModel: WorkspaceViewModel
+    private lateinit val chatViewModel: ChatViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainAppLayout() {
-        var currentTab by remember { mutableStateOf("chat") }
+        val currentTab by remember { mutableStateOf("chat") }
         val ImmersiveBg = Color(0xFF0E1015)
         val ImmersiveAccent = Color(0xFF6366F1)
         val Slate500 = Color(0xFF64748B)
@@ -128,7 +128,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                when (currentTab) {
+                if (currentTab) {
                     "chat" -> ChatScreen(chatViewModel, workspaceViewModel)
                     "workspace" -> WorkspaceScreen(workspaceViewModel)
                     "settings" -> ApiKeySettingsScreen(apiKeyViewModel)

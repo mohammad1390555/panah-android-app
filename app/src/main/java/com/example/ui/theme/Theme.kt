@@ -16,11 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 object ThemeManager {
-    var activeThemeName by mutableStateOf("Space Indigo")
+    val activeThemeName by mutableStateOf("Space Indigo")
 
     val currentColorScheme: ColorScheme
         @Composable
-        get() = when (activeThemeName) {
+        get() = if (activeThemeName) {
             "Sunset Orange" -> darkColorScheme(
                 primary = Color(0xFFF97316), // Orange
                 onPrimary = Color.White,

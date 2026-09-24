@@ -43,8 +43,8 @@ import kotlin.random.Random
 // Data classes for visualizers
 data class GraphNode(val name: String, val x: Float, val y: Float, val size: Float, val color: Color)
 data class GraphLink(val from: Int, val to: Int)
-data class Achievement(val title: String, val desc: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, var isUnlocked: Boolean)
-data class Particle(var x: Float, var y: Float, val speed: Float, val size: Float, val alpha: Float)
+data class Achievement(val title: String, val desc: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val isUnlocked: Boolean)
+data class Particle(val x: Float, val y: Float, val speed: Float, val size: Float, val alpha: Float)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,16 +54,16 @@ fun LabsScreen() {
     val scrollState = rememberScrollState()
 
     // 1. AI Models state
-    var selectedModel by remember { mutableStateOf("Gemini 1.5 Pro") }
-    var fallbackEnabled by remember { mutableStateOf(true) }
-    var hybridFusion by remember { mutableStateOf(false) }
-    var superFocusEnabled by remember { mutableStateOf(false) }
+    val selectedModel by remember { mutableStateOf("Gemini 1.5 Pro") }
+    val fallbackEnabled by remember { mutableStateOf(true) }
+    val hybridFusion by remember { mutableStateOf(false) }
+    val superFocusEnabled by remember { mutableStateOf(false) }
 
     // 2. Theme State
-    var activeTheme by remember { mutableStateOf(ThemeManager.activeThemeName) }
+    val activeTheme by remember { mutableStateOf(ThemeManager.activeThemeName) }
 
     // 3. Zen Mode State
-    var zenModeActive by remember { mutableStateOf(false) }
+    val zenModeActive by remember { mutableStateOf(false) }
     val particles = remember { mutableStateListOf<Particle>() }
 
     // Initialize rain particles
@@ -95,15 +95,15 @@ fun LabsScreen() {
     }
 
     // 4. Code Sandbox State
-    var inputCode by remember { mutableStateOf("fun calculateVibe(x: Int, y: Int): String {\n    val result = x + y\n    return \"Your vibe level is: \$result\"\n}") }
-    var sandboxOutput by remember { mutableStateOf("") }
-    var isAnalyzing by remember { mutableStateOf(false) }
+    val inputCode by remember { mutableStateOf("fun calculateVibe(x: Int, y: Int): String {\n    val result = x + y\n    return \"Your vibe level is: \$result\"\n}") }
+    val sandboxOutput by remember { mutableStateOf("") }
+    val isAnalyzing by remember { mutableStateOf(false) }
 
     // 5. Security state
-    var ephemeralTimer by remember { mutableStateOf(15) }
-    var isVaultLocked by remember { mutableStateOf(false) }
-    var selfDestructActive by remember { mutableStateOf(false) }
-    var selfDestructTimer by remember { mutableStateOf(10) }
+    val ephemeralTimer by remember { mutableStateOf(15) }
+    val isVaultLocked by remember { mutableStateOf(false) }
+    val selfDestructActive by remember { mutableStateOf(false) }
+    val selfDestructTimer by remember { mutableStateOf(10) }
 
     // Start self destruct timer if active
     LaunchedEffect(selfDestructActive) {
@@ -121,26 +121,26 @@ fun LabsScreen() {
     }
 
     // 6. Ecosystem State
-    var pairingToken by remember { mutableStateOf("VF-8930") }
+    val pairingToken by remember { mutableStateOf("VF-8930") }
 
     // 7. Vibe Profile
-    var codingStyle by remember { mutableStateOf("Brutalist") }
-    var useSpaces by remember { mutableStateOf(true) }
-    var persianLevel by remember { mutableStateOf("Mix Comments") }
+    val codingStyle by remember { mutableStateOf("Brutalist") }
+    val useSpaces by remember { mutableStateOf(true) }
+    val persianLevel by remember { mutableStateOf("Mix Comments") }
 
     // 8. Performance State
-    var promptCacheMb by remember { mutableStateOf(24.5) }
-    var hardwareAcc by remember { mutableStateOf(true) }
+    val promptCacheMb by remember { mutableStateOf(24.5) }
+    val hardwareAcc by remember { mutableStateOf(true) }
 
     // 9. Accessibility
-    var fontScaleFactor by remember { mutableStateOf(1.0f) }
+    val fontScaleFactor by remember { mutableStateOf(1.0f) }
 
     // 10. Gamification & Music Synthesizer
-    var userXp by remember { mutableStateOf(4200) }
-    var userLevel by remember { mutableStateOf(5) }
+    val userXp by remember { mutableStateOf(4200) }
+    val userLevel by remember { mutableStateOf(5) }
     val totalXpNeeded = 5000
-    var rewardClaimed by remember { mutableStateOf(false) }
-    var musicPlaying by remember { mutableStateOf(false) }
+    val rewardClaimed by remember { mutableStateOf(false) }
+    val musicPlaying by remember { mutableStateOf(false) }
 
     val achievements = remember {
         mutableStateListOf(
@@ -334,7 +334,7 @@ fun LabsScreen() {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("Interactive File dependency Map (Click nodes)", color = Color.Gray, fontSize = 11.sp, fontWeight = FontWeight.Bold)
 
-                    var selectedNodeName by remember { mutableStateOf("MainActivity.kt") }
+                    val selectedNodeName by remember { mutableStateOf("MainActivity.kt") }
 
                     Canvas(
                         modifier = Modifier
@@ -800,7 +800,7 @@ fun LabsScreen() {
                                             sample[i] = Math.sin(2 * Math.PI * i / (sampleRate / freqOfTone))
                                         }
 
-                                        var idx = 0
+                                        val idx = 0
                                         for (dVal in sample) {
                                             val valShort = (dVal * 32767).toInt().toShort()
                                             generatedSnd[idx++] = (valShort.toInt() and 0x00ff).toByte()
