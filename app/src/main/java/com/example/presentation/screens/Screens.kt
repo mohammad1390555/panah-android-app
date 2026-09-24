@@ -86,7 +86,7 @@ fun ChatScreen(
     val rootUri by workspaceViewModel.projectRootUri.collectAsStateWithLifecycle()
     val pinnedFiles by workspaceViewModel.pinnedFiles.collectAsStateWithLifecycle()
 
-    var inputMessage by remember { mutableStateOf("") }
+    val inputMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     // Voice to text launcher
@@ -138,7 +138,7 @@ fun ChatScreen(
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(
-                                    text = if (rootUri != null) "Workspace: ${rootUri!!.path?.split("/")?.lastOrNull() ?: "Active"}" else "Active • Gemini 1.5 Pro",
+                                    text = if (rootUri != null) "Workspace: ${rootUri?.path?.split("/")?.lastOrNull() ?: "Active"}" else "Active • Gemini 1.5 Pro",
                                     fontSize = 10.sp,
                                     color = Slate400,
                                     fontWeight = FontWeight.Medium
@@ -519,8 +519,8 @@ fun WorkspaceScreen(
     val snapshots by viewModel.snapshots.collectAsStateWithLifecycle()
     val pinnedFiles by viewModel.pinnedFiles.collectAsStateWithLifecycle()
 
-    var showCreateDialog by remember { mutableStateOf(false) }
-    var createFileName by remember { mutableStateOf("") }
+    val showCreateDialog by remember { mutableStateOf(false) }
+    val createFileName by remember { mutableStateOf("") }
     
     val context = LocalContext.current
 
@@ -639,7 +639,7 @@ fun WorkspaceScreen(
                                 .background(JetSlate)
                                 .padding(8.dp)
                         ) {
-                            var editedContent by remember(activeFilePath, activeFileContent) {
+                            val editedContent by remember(activeFilePath, activeFileContent) {
                                 mutableStateOf(activeFileContent ?: "")
                             }
                             val isFilePinned = pinnedFiles.any { it.filePath == activeFilePath }
@@ -654,7 +654,7 @@ fun WorkspaceScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        activeFilePath!!.split("/").last(),
+                                        activeFilePath?.split("/").last(),
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 14.sp,
@@ -662,7 +662,7 @@ fun WorkspaceScreen(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        activeFilePath!!,
+                                        activeFilePath?,
                                         color = Color.LightGray,
                                         fontSize = 10.sp,
                                         maxLines = 1,
@@ -671,7 +671,7 @@ fun WorkspaceScreen(
                                 }
 
                                 IconButton(
-                                    onClick = { viewModel.togglePinFile(activeFilePath!!, isFilePinned) },
+                                    onClick = { viewModel.togglePinFile(activeFilePath?, isFilePinned) },
                                     modifier = Modifier.size(28.dp)
                                 ) {
                                     SizedIcon(
@@ -683,7 +683,7 @@ fun WorkspaceScreen(
                                 }
 
                                 IconButton(
-                                    onClick = { viewModel.saveFileContent(activeFilePath!!, editedContent) },
+                                    onClick = { viewModel.saveFileContent(activeFilePath?, editedContent) },
                                     modifier = Modifier.size(28.dp)
                                 ) {
                                     SizedIcon(Icons.Default.Save, contentDescription = "Save file", tint = AccentTeal, size = 16.dp)
@@ -892,18 +892,18 @@ fun ApiKeySettingsScreen(
     val testResults by viewModel.testResults.collectAsStateWithLifecycle()
     val isTesting by viewModel.isTesting.collectAsStateWithLifecycle()
 
-    var showAddDialog by remember { mutableStateOf(false) }
-    var currentEditingKey by remember { mutableStateOf<ApiKeyEntity?>(null) }
+    val showAddDialog by remember { mutableStateOf(false) }
+    val currentEditingKey by remember { mutableStateOf<ApiKeyEntity?>(null) }
 
     // Dialog state variables
-    var provider by remember { mutableStateOf("GEMINI") }
-    var name by remember { mutableStateOf("") }
-    var keyVal by remember { mutableStateOf("") }
-    var customUrl by remember { mutableStateOf("") }
-    var isDefault by remember { mutableStateOf(false) }
-    var apiFormat by remember { mutableStateOf("OPENAI") }
-    var customModel by remember { mutableStateOf("") }
-    var isCustomEndpoint by remember { mutableStateOf(false) }
+    val provider by remember { mutableStateOf("GEMINI") }
+    val name by remember { mutableStateOf("") }
+    val keyVal by remember { mutableStateOf("") }
+    val customUrl by remember { mutableStateOf("") }
+    val isDefault by remember { mutableStateOf(false) }
+    val apiFormat by remember { mutableStateOf("OPENAI") }
+    val customModel by remember { mutableStateOf("") }
+    val isCustomEndpoint by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -1185,7 +1185,7 @@ fun ApiKeySettingsScreen(
                                             )
                                         } else {
                                             viewModel.editApiKey(
-                                                entity = currentEditingKey!!,
+                                                entity = currentEditingKey?,
                                                 name = name,
                                                 key = keyVal.takeIf { it.isNotEmpty() },
                                                 baseUrl = customUrl,
@@ -1221,7 +1221,7 @@ fun ApiKeyRowItem(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    val statusColor = when (key.status.uppercase()) {
+    val statusColor = if (key.status.uppercase()) {
         "ACTIVE" -> TerminalGreen
         "EXHAUSTED" -> CyberPink
         else -> Color.Gray

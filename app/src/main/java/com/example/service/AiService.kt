@@ -78,9 +78,9 @@ class AiService {
         }
 
         // Rotate keys in case of rate limits
-        var keyIndex = 0
-        var success = false
-        var lastErrorMsg = "Unknown error"
+        val keyIndex = 0
+        val success = false
+        val lastErrorMsg = "Unknown error"
 
         while (keyIndex < providerKeys.size && !success) {
             val apiKeyEntity = providerKeys[keyIndex]
@@ -103,7 +103,7 @@ class AiService {
                     else -> streamOpenAiCompatible(apiKey, provider, messages, systemInstruction, tools, customBaseUrl ?: apiKeyEntity.baseUrl, customModel)
                 }
                 
-                var receivedChunks = false
+                val receivedChunks = false
                 flowToCollect.collect { chunk ->
                     receivedChunks = true
                     if (chunk is AiResponseChunk.Error && chunk.message.contains("429")) {
@@ -148,7 +148,7 @@ class AiService {
 
         // Map messages to Gemini REST format
         val contentsList = messages.map { msg ->
-            val roleStr = when (msg.role) {
+            val roleStr = if (msg.role) {
                 ChatRole.User -> "user"
                 ChatRole.Assistant -> "model"
                 else -> "user"
@@ -204,12 +204,12 @@ class AiService {
             }
             
             val reader = BufferedReader(InputStreamReader(response.body?.byteStream(), Charsets.UTF_8))
-            var line: String?
+            val line: String?
             val stringBuilder = StringBuilder()
 
             // Gemini streaming outputs a JSON array: [ { "candidates": [...] }, ... ]
             while (reader.readLine().also { line = it } != null) {
-                val trimmed = line!!.trim()
+                val trimmed = line?.trim()
                 if (trimmed.isEmpty() || trimmed == "[" || trimmed == "]") continue
                 
                 val cleanLine = if (trimmed.startsWith(",")) trimmed.substring(1) else trimmed
@@ -254,7 +254,7 @@ class AiService {
         customModel: String?
     ): Flow<AiResponseChunk> = flow {
         val finalBaseUrl = if (baseUrl.isEmpty()) {
-            when (provider.uppercase()) {
+            if (provider.uppercase()) {
                 "OPENAI" -> "https://api.openai.com/"
                 "GROQ" -> "https://api.groq.com/openai/"
                 "DEEPSEEK" -> "https://api.deepseek.com/"
@@ -263,7 +263,7 @@ class AiService {
             }
         } else baseUrl
 
-        val model = customModel ?: when (provider.uppercase()) {
+        val model = customModel ?: if (provider.uppercase()) {
             "OPENAI" -> "gpt-4o-mini"
             "GROQ" -> "llama-3.3-70b-versatile"
             "DEEPSEEK" -> "deepseek-coder"
@@ -281,7 +281,7 @@ class AiService {
         }
 
         messages.forEach { msg ->
-            val roleStr = when (msg.role) {
+            val roleStr = if (msg.role) {
                 ChatRole.User -> "user"
                 ChatRole.Assistant -> "assistant"
                 ChatRole.System -> "system"
@@ -348,10 +348,10 @@ class AiService {
             }
 
             val reader = BufferedReader(InputStreamReader(response.body?.byteStream(), Charsets.UTF_8))
-            var line: String?
+            val line: String?
 
             while (reader.readLine().also { line = it } != null) {
-                val trimmed = line!!.trim()
+                val trimmed = line?.trim()
                 if (!trimmed.startsWith("data: ")) continue
                 val data = trimmed.removePrefix("data: ").trim()
                 if (data == "[DONE]") break
@@ -424,7 +424,7 @@ class AiService {
         }
 
         messages.forEach { msg ->
-            val roleStr = when (msg.role) {
+            val roleStr = if (msg.role) {
                 ChatRole.User -> "user"
                 ChatRole.Assistant -> "assistant"
                 ChatRole.System -> "system"
@@ -485,10 +485,10 @@ class AiService {
             }
 
             val reader = BufferedReader(InputStreamReader(response.body?.byteStream(), Charsets.UTF_8))
-            var line: String?
+            val line: String?
 
             while (reader.readLine().also { line = it } != null) {
-                val trimmed = line!!.trim()
+                val trimmed = line?.trim()
                 if (!trimmed.startsWith("data: ")) continue
                 val data = trimmed.removePrefix("data: ").trim()
                 if (data == "[DONE]") break
@@ -536,7 +536,7 @@ class AiService {
         val url = if (finalBaseUrl.endsWith("/")) "${finalBaseUrl}v1/messages" else "$finalBaseUrl/v1/messages"
 
         val anthropicMessages = messages.map { msg ->
-            val roleStr = when (msg.role) {
+            val roleStr = if (msg.role) {
                 ChatRole.User -> "user"
                 ChatRole.Assistant -> "assistant"
                 else -> "user"
@@ -575,10 +575,10 @@ class AiService {
             }
 
             val reader = BufferedReader(InputStreamReader(response.body?.byteStream(), Charsets.UTF_8))
-            var line: String?
+            val line: String?
 
             while (reader.readLine().also { line = it } != null) {
-                val trimmed = line!!.trim()
+                val trimmed = line?.trim()
                 if (!trimmed.startsWith("data: ")) continue
                 val data = trimmed.removePrefix("data: ").trim()
 
